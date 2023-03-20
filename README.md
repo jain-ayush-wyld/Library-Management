@@ -7,3 +7,5 @@ i)  pip install PILLOW
 ii) pip install mysql
 iii) pip install pymysql
 Make sure both python idle and sql are added to path
+
+The main file is libmanage.py
