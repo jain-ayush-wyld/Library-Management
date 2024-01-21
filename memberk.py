@@ -1,24 +1,18 @@
 from ctypes import *
 from tkinter import *
-from PIL import ImageTk
-from PIL import Image as immage
 from tkinter import messagebox
-import mysql
-import mysql.connector
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import mysql.connector as sqlt
-import datetime as dt
 from datetime import date
-from datetime import timedelta
+
 def go1():
     global name1,add,pno,mno,name,entry3,entry4,entry5,entry1,entry12,membershipno
     add=entry3.get()
     pno=entry4.get()
     mno=entry5.get()
     name1=entry12.get()
-    c1.execute('update membership_register set Member_Name=\''+(str(name1)).upper()+'\',Member_address=\''+str(add)+'\',Mobile_number='+str(mno)+',Phone_number='+(pno)+' where MembershipNo=\''+str(membershipno)+'\'')
+    c1.execute('update membership_register set Member_Name=\''+(str(name1)).upper()+'\',Member_address=\''+str(add)+'\',Mobile_number='+str(mno)+',Phone_number='+str(pno)+' where MembershipNo=\''+str(membershipno)+'\'')
     c2.commit()
     messagebox.showinfo('SUCCESS','Succesfully Updated')
     vroot2.destroy()
@@ -68,15 +62,15 @@ def go():
         labe8=Label(fr1,text='Date of expiry of membership',bg='black',fg='white')
         entr7=Label(fr1,text=de)
         labe4.place(relx=0.02,rely=0.33)
-        entr3.place(relx=0.28,rely=0.33,relwidth=0.5)
+        entr3.place(relx=0.3,rely=0.33,relwidth=0.4)
         labe5.place(relx=0.02,rely=0.47)
-        entr4.place(relx=0.28,rely=0.47,relwidth=0.5)
+        entr4.place(relx=0.3,rely=0.47,relwidth=0.4)
         labe6.place(relx=0.02,rely=0.61)
-        entr5.place(relx=0.28,rely=0.61,relwidth=0.5)
+        entr5.place(relx=0.3,rely=0.61,relwidth=0.4)
         labe7.place(relx=0.02,rely=0.75)
-        entr6.place(relx=0.28,rely=0.75,relwidth=0.5)
+        entr6.place(relx=0.3,rely=0.75,relwidth=0.4)
         labe8.place(relx=0.02,rely=0.89)
-        entr7.place(relx=0.28,rely=0.89,relwidth=0.5)
+        entr7.place(relx=0.3,rely=0.89,relwidth=0.4)
         fr1.place(relx=0.05,rely=0.2,relwidth=0.9,relheight=0.7)
         qbtn1=Button(text='QUIT',master=v5,bg='#d1ccc0', fg='black',command=quit9)
         qbtn1.place(relx=0.4,rely=0.92, relwidth=0.18,relheight=0.06)
@@ -161,6 +155,7 @@ def sub1():
     global name,add,pno,mno,memno,e1,e3,e4,e5
     q8()
     name=e1.get()
+    name=name.upper()
     add=e3.get()
     pno=e4.get()
     mno=e5.get()
@@ -180,10 +175,13 @@ def sub1():
             m=int(memno[0][0])+1
         date0=date.today()
         date1=str(date0.year)+'-'+str(date0.month)+'-'+str(date0.day)
-        date2=str((date0.year)+2)+'-'+str(date0.month)+'-'+str(date0.day)
-        com='insert into membership_register values('+str(m)+',\''+str(name.upper())+'\',\''+str(add.upper())+'\','+str(pno)+','+str(mno)+',\''+date1+"','"+date2+'\',3000)'
+        date2=str((date0.year)+1)+'-'+str(date0.month)+'-'+str(date0.day)
+        print(date2)
+        print(date0)
+        com='insert into membership_register values('+str(m)+',\''+str(name.upper())+'\',\''+str(add.upper())+'\','+str(pno)+','+str(mno)+',\''+date1+"','"+date2+'\',1500)'
         c1.execute(com)
         c1.execute('commit')
+        c2.commit()
         messagebox.showinfo('SUCCESS','Successfully Added')
         
 
