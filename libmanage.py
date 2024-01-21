@@ -5,20 +5,17 @@ from PIL import Image as immage
 from tkinter import messagebox
 import mysql
 import mysql.connector
-import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import mysql.connector as sqlt
-import datetime as dt
-from datetime import date
-from datetime import timedelta
-from issuek import book_issue,Quit3,submit4,book_return,Quit4,submit5
-from memberk import go1,go,quit9,search,q4,new,q3,sub1,sub,delete,q2,modify,q1,submit3,q6,s1,renew,q5,member_regis,q8
-from bookk import book_regis,Quit9,addbook,testVal,submit1,Quit,deletebook,submit2,Quit1,book_details,submit6,searchin2,Quit6,submit7,searchin1,Quit7
+from issuek import book_issue,book_return
+from memberk import member_regis
+from bookk import book_regis
 def submit():
     global username,passcode,cur,con
     username = info1.get()
-    passcode = info2.get()        
+    passcode = info2.get()
+    #print(username)
+    #print(passcode)
     '''
     con=mysql.connector.connect(host='localhost',user=username,password=passcode)
     messagebox.showinfo("logged in","YOU HAVE SUCCESSFULLY LOGGED IN ")
@@ -48,7 +45,7 @@ def submit():
         cur.execute("use db")
         cur.execute("show tables")
         t1=cur.fetchall()
-        
+        '''
         if (("issue"),) in t1:
             cur.execute("describe issue")
             t12=cur.fetchall()
@@ -62,8 +59,15 @@ def submit():
                 cur.execute("create table issue(bid char(20),memid char(20),date_of_issue date,due_date_of_return date,returned_date date)")
         else:
             cur.execute("create table issue(bid char(20),memid char(20),date_of_issue date,due_date_of_return date,returned_date date)")    
-
-        
+        '''
+        if (not((("issue"),)in t1)):
+            cur.execute("create table issue(bid char(20),memid char(20),date_of_issue date,due_date_of_return date,returned_date date)")
+            cur.execute("ALTER TABLE issue ADD COLUMN SerialNumber INT AUTO_INCREMENT PRIMARY KEY")
+        if (not((("book"),)in t1)):
+            cur.execute("create table book(id char(20) primary key,title char(200),author char(200),publication char(200),yr_publi char(20),status char(9) default 'avialable')")
+        if (not((("membership_register"),)in t1)):
+            cur.execute("create table membership_register(MembershipNo char(25) primary key,Member_Name varchar(200) null,Member_address varchar(200) not null,Phone_number decimal(10,0) not null,Mobile_number decimal(10,0) null,Dateof_start_of_membership date  not null,Date_of_expiry_of_membership date not null,Membership_Fees decimal(10,0) null)")
+        '''
         if (("book"),) in t1:
             cur.execute("describe book")
             t2=cur.fetchall()
@@ -79,7 +83,8 @@ def submit():
                 cur.execute("create table book(id char(20) primary key,title char(20),author char(20),publication char(20),yr_publi char(20),status char(9) default 'avialable')")
         else:
             cur.execute("create table book(id char(20) primary key,title char(20),author char(20),publication char(20),yr_publi char(20),status char(9) default 'avialable')")
-
+        '''
+        '''
         if (("membership_register"),) in t1:
             cur.execute("describe membership_register")
             t3=cur.fetchall()
@@ -93,23 +98,27 @@ def submit():
                 
         else:
             cur.execute("create table membership_register(MembershipNo char(25) primary key,Member_Name varchar(25) null,Member_address varchar(60) not null,Phone_number decimal(10,0) not null,Mobile_number decimal(10,0) null,Dateof_start_of_membership date  not null,Date_of_expiry_of_membership date not null,Membership_Fees decimal(10,0) null)")
-        
+        '''
         vroot.destroy()
         btn1.destroy()
         cursor=con.cursor()
-        btn2 = Button(root,text="MEMBERSHIP REGISTER",bg='black', fg='white',command=cmd1)
+        btn2 = Button(root,text="Membership Register",bg='black', fg='white',command=cmd1)
         btn2.place(relx=0.28,rely=0.4, relwidth=0.45,relheight=0.1)
-        btn3 = Button(root,text="BOOK REGISTER",bg='black', fg='white',command=cmd2)
+        btn3 = Button(root,text="Book Register",bg='black', fg='white',command=cmd2)
         btn3.place(relx=0.28,rely=0.5, relwidth=0.45,relheight=0.1)
-        btn4 = Button(root,text="ISSUE",bg='black', fg='white',command=cmd3)
+        btn4 = Button(root,text="Issue",bg='black', fg='white',command=cmd3)
         btn4.place(relx=0.28,rely=0.6, relwidth=0.45,relheight=0.1)
-        btn5 = Button(root,text="RETURN",bg='black', fg='white',command=cmd4)
+        btn5 = Button(root,text="Return",bg='black', fg='white',command=cmd4)
         btn5.place(relx=0.28,rely=0.7, relwidth=0.45,relheight=0.1)
-        QuitBtn=Button(root,text="QUIT",bg='#d1ccc0', fg='black',command=Quit8)
+        QuitBtn=Button(root,text="Quit",bg='#d1ccc0', fg='black',command=Quit8)
         QuitBtn.place(relx=0.4,rely=0.9, relwidth=0.18,relheight=0.08)
     except:
         messagebox.showerror("ERROR","PASSWORD/USERNAME IS INCORRECT")
         vroot.destroy()
+        #con.rollback()
+    
+    
+    
 
 def cmd1():
     member_regis(cur,con)
@@ -124,9 +133,6 @@ def Quit8():
     root.destroy()
 
 def test():
-    
-    
-   
     #ANY VARIABLE OR NAME TO BE PUT HERE
     global info1,info2,lb1,lb2,root,vroot,username,passcode,cursor,btn1,xroot
 
@@ -136,17 +142,17 @@ def test():
     vroot.geometry("600x500")
     
     labelFrame = Frame(vroot,bg='black')
-    labelFrame.place(relx=0.1,rely=0.3,relwidth=0.8,relheight=0.5)   
+    labelFrame.place(relx=0.1,rely=0.3,relwidth=0.8,relheight=0.3)   
         
     lb1 = Label(labelFrame,text="USER ID ", bg='black', fg='white')
-    lb1.place(relx=0.05,rely=0.5)
+    lb1.place(relx=0.05,rely=0.2)
     info1 = Entry(labelFrame)
-    info1.place(relx=0.3,rely=0.5, relwidth=0.62)
+    info1.place(relx=0.3,rely=0.2, relwidth=0.62)
 
     lb2 = Label(labelFrame,text="PASSWORD ", bg='black', fg='white')
-    lb2.place(relx=0.05,rely=0.6)
+    lb2.place(relx=0.05,rely=0.4)
     info2 = Entry(labelFrame)
-    info2.place(relx=0.3,rely=0.6, relwidth=0.62)
+    info2.place(relx=0.3,rely=0.4, relwidth=0.62)
     SubmitBtn = Button(vroot,text="Login",bg='#d1ccc0', fg='black',command=submit)
     SubmitBtn.place(relx=0.28,rely=0.9, relwidth=0.18,relheight=0.08)
     QuitBtn=Button(vroot,text="CLOSE",bg='#d1ccc0', fg='black',command=Quit2)
@@ -176,7 +182,7 @@ image = ImageTk.PhotoImage(file="download1.jpg")
 canvas.create_image(0, 0, image=image, anchor=NW)
 headingFrame1 = Frame(root,bg="#FFBB00",bd=5)
 headingFrame1.place(relx=0.2,rely=0.1,relwidth=0.6,relheight=0.16)
-headingLabel = Label(headingFrame1, text="Welcome to \n Mahatma Gandhi Central Library", bg='black', fg='white', font=('Courier',15))
+headingLabel = Label(headingFrame1, text="  Welcome to \n MGCL", bg='black', fg='white', font=('Courier',15))
 headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
 btn1 = Button(root,text="LOG IN TO MY SQL",bg='black', fg='white',command=test)
 btn1.place(relx=0.28,rely=0.4, relwidth=0.45,relheight=0.1)
