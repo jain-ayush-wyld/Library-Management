@@ -1,14 +1,10 @@
 from ctypes import *
 from tkinter import *
-from PIL import ImageTk
-from PIL import Image as immage
 from tkinter import messagebox
 import mysql
 import mysql.connector
-import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import mysql.connector as sqlt
 import datetime as dt
 from datetime import date
 from datetime import timedelta
@@ -28,11 +24,11 @@ def book_issue(cur,con):
     headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
     labelFrame = Frame(eroot,bg='black')
     labelFrame.place(relx=0.1,rely=0.3,relwidth=0.8,relheight=0.5)
-    lb1 = Label(labelFrame,text="BOOK ID", bg='black', fg='white')
+    lb1 = Label(labelFrame,text="Book ID", bg='black', fg='white')
     lb1.place(relx=0.05,rely=0.3)
     info1 = Entry(labelFrame)
     info1.place(relx=0.3,rely=0.3, relwidth=0.62)
-    lb2 = Label(labelFrame,text="MEMBER ID", bg='black', fg='white')
+    lb2 = Label(labelFrame,text="Member ID", bg='black', fg='white')
     lb2.place(relx=0.05,rely=0.4)
     info2 = Entry(labelFrame)
     info2.place(relx=0.3,rely=0.4, relwidth=0.62)
@@ -61,8 +57,8 @@ def submit4():
         c1.execute("select MembershipNo from membership_register")
         t9=c1.fetchall()
         
-        temp1=(v1),
-        temp2=(v2),
+        temp1=(v1,)
+        temp2=(v2,)
         
         if temp2 in t9:
             if temp1 in t8:
@@ -84,7 +80,16 @@ def submit4():
                             c2.commit()
                             date0=str(date0.year)+'-'+str(date0.month)+'-'+str(date0.day)
                             date2=str(date2.year)+'-'+str(date2.month)+'-'+str(date2.day)
-                            c1.execute("insert into issue values('"+v1+"','"+v2+"','"+date0+"','"+date2+"','"+date2+"')") 
+                            c1.execute("select max(SerialNumber) from issue")
+                            j=c1.fetchall()
+                            print(j)
+                            if j[0][0]==None:
+                                j=1
+                            else:
+                                j=int(j[0][0])+1
+                            str1=str(j)
+                            print(j)
+                            c1.execute("insert into issue values('"+v1+"','"+v2+"','"+date0+"','"+date2+"','"+date2+"','"+str1+"')") 
                             c2.commit()
                             messagebox.showinfo("s","book has been success fully issued")
                         else:
@@ -98,9 +103,10 @@ def submit4():
         else:
             messagebox.showerror("error","CHECK THE ENTERED DETAILS")
 def book_return(cur,con):
+    global info1,info2,froot,c1,c2
     c1=cur
     c2=con
-    global info1,info2,froot
+    
     froot=Tk()
     froot.title("library")
     froot.minsize(width=400,height=400)
@@ -173,6 +179,7 @@ def submit5():
                             date3=str(date0.year)+'-'+str(date0.month)+'-'+str(date0.day)
                             messagebox.showinfo("fine","YOUR FINE IS RUPPEES : "+str(fine))
                             c1.execute("update issue set returned_date = '"+date3+"' where bid = "+v1)
+                            c2.commit()
                             c1.execute("update book set status = 'avialable' where id="+v1)
                             c2.commit()
                         else:
@@ -180,6 +187,8 @@ def submit5():
                             fine=init*delta.days
                             messagebox.showinfo("fine","YOUR FINE IS RUPPEES :"+str(fine))
                             c1.execute("update issue set returned_date = '"+date3+"' where bid = "+v1)
+                            c2.commit()
+                            c1.execute("update book set status = 'avialable' where id="+v1)
                             c2.commit()
                     else:
                         messagebox.showerror("error","THE BOOK HAS NOT BEEN ISSUED YET")
