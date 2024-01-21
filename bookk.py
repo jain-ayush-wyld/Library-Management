@@ -1,17 +1,11 @@
 from ctypes import *
 from tkinter import *
-from PIL import ImageTk
-from PIL import Image as immage
 from tkinter import messagebox
 import mysql
 import mysql.connector
-import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import mysql.connector as sqlt
-import datetime as dt
-from datetime import date
-from datetime import timedelta
+
 def book_regis(cur,con):
     global c1,c2,broot
     c1=cur
@@ -26,16 +20,16 @@ def book_regis(cur,con):
     headingLabel = Label(headingFrame1, text="BOOK REGISTER", bg='black', fg='white', font=('Courier',15))
     headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
 
-    btn7 = Button(broot,text="NEW BOOK ENTRY",bg='black', fg='white', command=addbook)
+    btn7 = Button(broot,text="New Book Entry",bg='black', fg='white', command=addbook)
     btn7.place(relx=0.28,rely=0.4, relwidth=0.45,relheight=0.1)
         
-    btn8 = Button(broot,text="DELETE BOOK",bg='black', fg='white', command=deletebook)
+    btn8 = Button(broot,text="Delete Book",bg='black', fg='white', command=deletebook)
     btn8.place(relx=0.28,rely=0.5, relwidth=0.45,relheight=0.1)
         
-    btn9 = Button(broot,text="VIEW BOOK LIST",bg='black', fg='white', command=book_details)
+    btn9 = Button(broot,text="View Book List",bg='black', fg='white', command=book_details)
     btn9.place(relx=0.28,rely=0.6, relwidth=0.45,relheight=0.1)
         
-    btn10 = Button(broot,text="SEARCH A BOOK",bg='black', fg='white', command=searchin1)
+    btn10 = Button(broot,text="Search a Book",bg='black', fg='white', command=searchin1)
     btn10.place(relx=0.28,rely=0.7, relwidth=0.45,relheight=0.1)
 
     QuitBtn=Button(broot,text="QUIT",bg='#d1ccc0', fg='black',command=Quit9)
@@ -235,8 +229,10 @@ def submit6():
             lb2.place(relx=0.2,rely=0.2)
         else:
             messagebox.showerror("error","THE BOOK ID DOES NOT EXIST")
+            Quit7()
     else:
         messagebox.showerror("error","ENTER A VALID BOOK ID")
+        Quit7()
 
 def searchin2():
     global c1,c2,info2,labelFrame1,hroot
@@ -255,18 +251,22 @@ def searchin2():
 
 def Quit6():
     hroot.destroy()
+    Quit9()
 
 def submit7():
     v2=info2.get()
+    v2=str(v2)
     v2=v2.upper()
     print(v2,"\n")
     c1.execute("use db")
     c1.execute("select title from book")
     t22=c1.fetchall()
+    t112=(v2,)
+    print(t112)
     print(t22)
-    if (((v2),),) in t22:
+    if t112 in t22:
         print("yes")
-        c1.execute("select * from book where title = "+v2)
+        c1.execute("select * from book where title = '"+v2+"'")
         t21=c1.fetchall()
         lb4 = Label(labelFrame1,text="BOOK ID : "+t21[0][0]+"\nTITLE : "+t21[0][1]+"\nAUTHOR : "+t21[0][2]+"\nPUBLICATION : "+t21[0][3]+"\nYR. OF PUBLICATION : "+t21[0][4]+"\nSTATUS : "+t21[0][5], bg='black', fg='white', font=('Courier',15))
         lb4.place(relx=0.2,rely=0.2)
@@ -299,4 +299,6 @@ def searchin1():
 
 def Quit7():
     hroot.destroy()
+    Quit9()
+    
 
